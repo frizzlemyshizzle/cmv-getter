@@ -10,18 +10,23 @@ import constants as con
 
 # https://api.tracker.gg/api/v2/rocket-league/standard/profile/steam/<steamID>
 
-linksList = [] #Start with empty list for tracker identifiers
 
-with open('trackers.csv') as csvfile: #Opens Trackers input file
-    count = 0 #Sets count to 0 to track number of entries in csv
-    trackers = csv.reader(csvfile) #Defines CSV file as trackers
-    for line in trackers: #For each line in csv file ->
-        count += 1 #Add to count
-        links = ''.join(line[2]) #Joins entries
-        links = links.split('/', 7) # Removes redundatnt data from count of '/'
-        links = links[6] # Sets links var as 6th index of variable (unique tracker ID)
-        linksList = links.split("\n") # Adds each line from links var to list
-        print(linksList)
+dataList = [] ## Start with empty list for tracker identifiers ##
+linksList = [] ## Start with empty list for trackers
+
+
+
+with open('trackers.csv') as csvfile: ## Opens Trackers input file ##
+    count = 0 ## Set count to track number of entries ##
+    trackers = csv.reader(csvfile) ## Defines file as 'trackers' ##
+
+    for row in trackers: ## For every row in trackers ##
+        dataList.append(row[0:3]) ## Add to list [0]RSC ID, [1]Name, [2]Link ##
+        count += 1 ## Add 1 to count for each row ##
+    print(str(count) + ' ENTRIES IN FILE')
+
+    for data in dataList:
+        linksList.append(data[2]) ## Add trackers links to links list ##
 
 
 
