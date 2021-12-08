@@ -11,7 +11,7 @@ import constants as con
 # https://api.tracker.gg/api/v2/rocket-league/standard/profile/steam/<steamID>
 
 
-dataList = [] ## Start with empty list for tracker identifiers
+dataList = [] ## Start with empty list for RSC ID, Name, Link
 linksList = [] ## Start with empty list for trackers
 identList = [] ## Start with empty list for idents (Steam ID / player name if console)
 
