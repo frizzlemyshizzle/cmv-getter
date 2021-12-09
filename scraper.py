@@ -2,16 +2,6 @@ import http.client
 import reader as r
 
 trnIdent = []  ## Start with empty list for rltn identifiers
-api_linksList = [] ## Start with empty list for api links
-link = '/api/v2/rocket-league/standard/profile/' ## Link prefix
-
-links = [link + ident for ident in r.identList]
-
-for link in links:
-    api_linksList.append(link)
-print(api_linksList[2])
-
-
 
 conn = http.client.HTTPSConnection("api.tracker.gg") ## Establish base of connection
 
