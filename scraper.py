@@ -1,7 +1,7 @@
 import http.client
 import reader as r
 
-trnIdent = []  ## Start with empty list for rltn identifiers
+trnIdentList = []  ## Start with empty list for rltn identifiers
 
 conn = http.client.HTTPSConnection("api.tracker.gg") ## Establish base of connection
 
@@ -13,14 +13,19 @@ headers = {
     'Content-Type': "application/json"
     }
 
-conn.request("GET", "/api/v2/rocket-league/standard/profile/steam/76561198197941479", payload, headers)
-
-res = conn.getresponse()
-data = res.read()
 
 
-dataList = data.split(",".encode()) ## Transform data from page to list, entries seperated by ','
 
-tracker_ident = (dataList[19].decode('utf-8')) ## Take 19th index of list (tracker ident)
+for profile in r.prof_linksList:
+    conn.request("GET", profile, payload, headers)
+    res = conn.getresponse()
+    data = res.read().split(",".encode())
+    dataList = data ## Transform data from page to list, entries seperated by ','
 
-trnIdent.append(tracker_ident[11:18]) ## Add Ident to trnIdent list
+    print(dataList)
+    print('####################NEXT PLAYER ############################')
+    dataList.clear()
+
+##tracker_ident = (dataList[19].decode('utf-8')) ## Take 19th index of list (tracker ident)
+
+##trnIdentList.append(tracker_ident[11:18]) ## Add Ident to trnIdent list

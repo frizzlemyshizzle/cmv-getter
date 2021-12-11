@@ -8,7 +8,7 @@ import constants as cons
 # https://api.tracker.gg/api/v2/rocket-league/standard/profile/steam/<steamID>
 
 
-dataList = [] ## Start with empty list for RSC ID, Name, Tracker Link
+inputdataList = [] ## Start with empty list for RSC ID, Name, Tracker Link
 linksList = [] ## Start with empty list for tracker links
 identList = [] ## Start with empty list for platform & ident -> (platform/identifier)
 prof_linksList = [] ## Start with empty list for profile api links
@@ -19,11 +19,11 @@ with open('trackers.csv') as csvfile: ## Opens Trackers input file
     trackers = csv.reader(csvfile) ## Defines file as 'trackers'
 
     for row in trackers: ## For every row in trackers ->
-        dataList.append(row[0:3]) ## Add to data list -> [0]RSC ID,[1]Name,[2]Link ([start:end-1]) 
+        inputdataList.append(row[0:3]) ## Add to data list -> [0]RSC ID,[1]Name,[2]Link ([start:end-1]) 
         count += 1 ## Add 1 to count
     print(str(count) + ' ENTRIES IN FILE \n')
 
-    for data in dataList: ## For every entry in data List ->
+    for data in inputdataList: ## For every entry in data List ->
         linksList.append(data[2]) ## Add trackers links to links list
 
     for links in linksList: ## For every link in link list ->
@@ -36,4 +36,3 @@ appended_links = [cons.PROF_ENDP + profile for profile in identList] ## Add prof
 
 for entry in appended_links: ## For every entry in appended_links ->
     prof_linksList.append(entry) ## Add entry to prof_linksList
-print(prof_linksList)
