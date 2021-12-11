@@ -1,7 +1,10 @@
 import http.client
 import reader as r
+import time
 
-trnIdent = []  ## Start with empty list for rltn identifiers
+start = time.time()
+
+trnIdentList = []  ## Start with empty list for rltn identifiers
 
 conn = http.client.HTTPSConnection("api.tracker.gg") ## Establish base of connection
 
@@ -13,14 +16,24 @@ headers = {
     'Content-Type': "application/json"
     }
 
-conn.request("GET", "/api/v2/rocket-league/standard/profile/steam/76561198197941479", payload, headers)
 
-res = conn.getresponse()
-data = res.read()
+for profile in r.prof_linksList: ## For each profile in list ->
+    conn.request("GET", profile, payload, headers) ## Hit ENDP
+    res = conn.getresponse() ## Define response
+    data = res.read() ## Define data from response
+    x = str(data) ## Transoform data to string      
 
+    if 'playerId' in x: ## If 'playerId' string in data ->                              ####################
+        ind = x.index('playerId') ## Get index for beginning of 'playerID'              ## THIS METHOD IS ##
+        ind1 = x[ind+10:ind+16] ## Start index + 10 to remove playerID, return ID       ##  REALLY SLOW!  ##
+        trnIdentList.append(ind1) ## Add ID to list                                     ####################
 
-dataList = data.split(",".encode()) ## Transform data from page to list, entries seperated by ','
+ 
 
-tracker_ident = (dataList[19].decode('utf-8')) ## Take 19th index of list (tracker ident)
+print(trnIdentList)
+print('####################################################')
+end = time.time()
+print('EXECUTION TIME: ', end-start)
+##tracker_ident = (dataList[19].decode('utf-8')) ## Take 19th index of list (tracker ident)
 
-trnIdent.append(tracker_ident[11:18]) ## Add Ident to trnIdent list
+##trnIdentList.append(tracker_ident[11:18]) ## Add Ident to trnIdent list
