@@ -20,13 +20,17 @@ headers = {
 for profile in r.prof_linksList: ## For each profile in list ->
     conn.request("GET", profile, payload, headers) ## Hit ENDP
     res = conn.getresponse() ## Define response
-    data = res.read() ## Define data from response
-    x = str(data) ## Transoform data to string      
+    data = res.read()
+    x = str(data)
+    if res.status == 200: ## If link is found ->
+        print(True)
+        if 'playerId' in x: ## If 'playerId' string in data ->                              ####################
+            ind = x.index('playerId') ## Get index for beginning of 'playerID'              ## THIS METHOD IS ##
+            ind1 = x[ind+10:ind+16] ## Start index + 10 to remove playerID, return ID       ##  REALLY SLOW!  ##
+            trnIdentList.append(ind1) ## Add ID to list                                     ####################   
+    else: ## If link is not found ->
+        trnIdentList.append("Link not found")
 
-    if 'playerId' in x: ## If 'playerId' string in data ->                              ####################
-        ind = x.index('playerId') ## Get index for beginning of 'playerID'              ## THIS METHOD IS ##
-        ind1 = x[ind+10:ind+16] ## Start index + 10 to remove playerID, return ID       ##  REALLY SLOW!  ##
-        trnIdentList.append(ind1) ## Add ID to list                                     ####################
 
  
 
@@ -34,6 +38,3 @@ print(trnIdentList)
 print('####################################################')
 end = time.time()
 print('EXECUTION TIME: ', end-start)
-##tracker_ident = (dataList[19].decode('utf-8')) ## Take 19th index of list (tracker ident)
-
-##trnIdentList.append(tracker_ident[11:18]) ## Add Ident to trnIdent list
