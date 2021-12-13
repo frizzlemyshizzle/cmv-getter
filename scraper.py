@@ -1,10 +1,14 @@
 import http.client
 import reader as r
 import time
+import constants as cons
+import json
+
 
 start = time.time()
 
 trnIdentList = []  ## Start with empty list for rltn identifiers
+historylinkList =[]
 
 conn = http.client.HTTPSConnection("api.tracker.gg") ## Establish base of connection
 
@@ -21,20 +25,14 @@ for profile in r.prof_linksList: ## For each profile in list ->
     conn.request("GET", profile, payload, headers) ## Hit ENDP
     res = conn.getresponse() ## Define response
     data = res.read()
-    x = str(data)
-    if res.status == 200: ## If link is found ->
-        print(True)
-        if 'playerId' in x: ## If 'playerId' string in data ->                              ####################
-            ind = x.index('playerId') ## Get index for beginning of 'playerID'              ## THIS METHOD IS ##
-            ind1 = x[ind+10:ind+16] ## Start index + 10 to remove playerID, return ID       ##  REALLY SLOW!  ##
-            trnIdentList.append(ind1) ## Add ID to list                                     ####################   
-    else: ## If link is not found ->
-        trnIdentList.append("Link not found")
-
-
- 
-
+    x = json.loads(data)
+    if res.status == 200:
+        rltnId = x['data']['metadata']['playerId']
+        trnIdentList.append(rltnId)
+    else:
+        trnIdentList.append('#######')
 print(trnIdentList)
-print('####################################################')
+historylinkList = [cons.HIST_ENDP + ident for ident in trnIdentList]
+
 end = time.time()
 print('EXECUTION TIME: ', end-start)
