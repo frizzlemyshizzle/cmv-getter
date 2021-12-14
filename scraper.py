@@ -1,10 +1,9 @@
 import http.client
-from typing import Collection
 import reader as r
 import time
 import constants as cons
 import json
-
+import csv
 
 start = time.time()
 
@@ -36,6 +35,8 @@ for profile in r.prof_linksList: ## For each profile in list ->
         historylinkList.append(cons.HIST_ENDP + '#######')
 
 ratingList = []
+ratingDate = []
+count = 0
 
 for link in historylinkList:
     if link[-1:] != '#':
@@ -46,11 +47,15 @@ for link in historylinkList:
         doublesRating = x['data']['11']
         threesRating  = x['data']['13']
         print(link)
-        ratingList.append(link)
+        print(r.inputdataList[count])
         for entry in doublesRating:
             ratingList.append(entry['rating'])
-            ratingList.append(entry['collectDate'])
-    print(ratingList)
+            ratingDate.append(entry['collectDate'])
+        print(max(ratingList))
+
+        ratingList.clear()
+    count +=1
+         
         
 
 end = time.time()
