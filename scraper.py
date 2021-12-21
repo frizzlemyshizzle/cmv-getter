@@ -1,9 +1,12 @@
 import http.client
+from re import T
 import reader as r
 import time
 import constants as cons
 import json
-import csv
+import datetime
+from datetime import datetime, date
+
 
 start = time.time()
 
@@ -34,28 +37,55 @@ for profile in r.prof_linksList: ## For each profile in list ->
         trnIdentList.append('#######') ## Give empty ID
         historylinkList.append(cons.HIST_ENDP + '#######')
 
-ratingList = []
-ratingDate = []
-count = 0
+
+scrape = '2021-10-24'
 
 for link in historylinkList:
-    if link[-1:] != '#':
+
+    ## Define Lists and reset each loop
+    ratingDataList = []
+    ratingList = []
+    ratingDate = []
+    holderList = []
+
+    if link[-1:] != '#': ## If link is not set as invalid ->
         conn.request("GET", link, payload, headers) ## Hit ENDP
         res = conn.getresponse() ## Define response
         data = res.read() ## Read and define response
         x = json.loads(data) ## Load response to Json
-        doublesRating = x['data']['11']
-        threesRating  = x['data']['13']
-        print(link)
-        print(r.inputdataList[count])
-        for entry in doublesRating:
-            ratingList.append(entry['rating'])
-            ratingDate.append(entry['collectDate'])
-        print(max(ratingList))
+        doublesRating = x['data']['11'] ## Fetch doubles rating from endpoint
+        threesRating  = x['data']['13'] ## Fetch threes rating from endpoint
 
-        ratingList.clear()
-    count +=1
+        for entry in doublesRating: ## For recorded mmr in twos ->
+            ratingDate.append(entry['collectDate']) ## Add date to ratingDate list
+            ratingList.append(entry['rating']) ## Add MMR to ratingList list
+
+        for date in ratingDate: ## For each date in ratingDate list ->
+            x = date[0:10] ## Take only the date (lazy way of remove time from datetime)
+            ratingDataList.append(x) ## Add date to data list
+            holderList.append(x) ## Holds all dates to process
+
+        print(link) ## Print link of player being parsed
+        ratingDate = [datetime.strptime(date, '%Y-%m-%d').date() for date in holderList] ## Adjust rating date format
+        for date in ratingDate: ## For each date in list ->
+            if date >= datetime.date(datetime.strptime(scrape, '%Y-%m-%d')): ## If starting date >= to date in list -> 
+                x = ratingDate.index(date) ## Store index of date as x
+                print(date) ## Print the date
+                print(ratingList[x]) ## Print the corresponding rating in ratingList
+
+    #print(ratingDataList)
+    ratingDataList.clear()
+
+
+
+        #print(max(ratingList))
+
+
          
+date = datetime.today().strftime('%Y-%m-%d')
+
+
+
         
 
 end = time.time()
