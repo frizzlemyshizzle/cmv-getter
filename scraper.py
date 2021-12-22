@@ -24,21 +24,29 @@ headers = {
     }
 
 
+
 for profile in r.prof_linksList: ## For each profile in list ->
-    conn.request("GET", profile, payload, headers) ## Hit ENDP
-    res = conn.getresponse() ## Define response
-    data = res.read() ## Read and define response
-    x = json.loads(data) ## Load response to Json
-    if res.status == 200: ## If site response = 200 (OK)
-        rltnId = x['data']['metadata']['playerId'] ## Take playerId from defined path
-        trnIdentList.append(rltnId) ## Add id to list
-        historylinkList.append(cons.HIST_ENDP + str(rltnId))
-    else: ## If response not 200 ->
+    if 'iJxG.?' in profile:
         trnIdentList.append('#######') ## Give empty ID
         historylinkList.append(cons.HIST_ENDP + '#######')
+    else:
+        conn.request("GET", profile, payload, headers) ## Hit ENDP
+        res = conn.getresponse() ## Define response
+        data = res.read() ## Read and define response
+        x = json.loads(data) ## Load response to Json
+
+        if res.status == 200: ## If site response = 200 (OK)
+            rltnId = x['data']['metadata']['playerId'] ## Take playerId from defined path
+            trnIdentList.append(rltnId) ## Add id to list
+            historylinkList.append(cons.HIST_ENDP + str(rltnId))
+
+        else: ## If response not 200 ->
+            trnIdentList.append('#######') ## Give empty ID
+            historylinkList.append(cons.HIST_ENDP + '#######')
 
 
 scrape = '2021-10-24'
+count = 0
 
 for link in historylinkList:
 
@@ -47,8 +55,9 @@ for link in historylinkList:
     ratingList = []
     ratingDate = []
     holderList = []
+    zonedRatingList = []
 
-    if link[-1:] != '#': ## If link is not set as invalid ->
+    if link[-1:] != '#':
         conn.request("GET", link, payload, headers) ## Hit ENDP
         res = conn.getresponse() ## Define response
         data = res.read() ## Read and define response
@@ -65,28 +74,21 @@ for link in historylinkList:
             ratingDataList.append(x) ## Add date to data list
             holderList.append(x) ## Holds all dates to process
 
-        print(link) ## Print link of player being parsed
+        #print(link) ## Print link of player being parsed
         ratingDate = [datetime.strptime(date, '%Y-%m-%d').date() for date in holderList] ## Adjust rating date format
         for date in ratingDate: ## For each date in list ->
             if date >= datetime.date(datetime.strptime(scrape, '%Y-%m-%d')): ## If starting date >= to date in list -> 
                 x = ratingDate.index(date) ## Store index of date as x
-                print(date) ## Print the date
-                print(ratingList[x]) ## Print the corresponding rating in ratingList
+                zonedRatingList.append(ratingList[x]) ## Print the corresponding rating in ratingList
+        print(r.inputdataList[count])
+        print(max(zonedRatingList))
 
-    #print(ratingDataList)
-    ratingDataList.clear()
-
-
-
-        #print(max(ratingList))
-
-
-         
-date = datetime.today().strftime('%Y-%m-%d')
-
-
-
-        
+    else:
+        zonedRatingList.append('BAD LINK')
+        print(r.inputdataList[count])
+        print('BAD LINK')
+    zonedRatingList.clear()
+    count +=1
 
 end = time.time()
 print('EXECUTION TIME: ', end-start)
