@@ -90,5 +90,7 @@ for link in historylinkList:
     zonedRatingList.clear()
     count +=1
 
+    ##### WRITE TO CSV ####
+
 end = time.time()
 print('EXECUTION TIME: ', end-start)
