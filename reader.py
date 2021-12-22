@@ -27,12 +27,19 @@ with open('trackers.csv') as csvfile: ## Opens Trackers input file
         linksList.append(data[2]) ## Add trackers links to links list
 
     for links in linksList: ## For every link in link list ->
-        ident = links.split('/', 5) ## Remove link info (Counts # of '/'), keep identifiers
-        ident = [ident.replace('/overview', '') for ident in ident] ## Remove '/overview' from links
-        identList.append(ident[5]) ## Add identifiers to indentifier list
+        if 'https://rocketleague.tracker.network/rocket-league/profile/' in links:
+            ident = links.split('/', 5) ## Remove link info (Counts # of '/'), keep identifiers
+            ident = [ident.replace('/overview', '') for ident in ident] ## Remove '/overview' from links
+            identList.append(ident[5]) ## Add identifiers to indentifier list
+        else:
+            identList.append('iJxG.?')
+
+
+
 
 
 appended_links = [cons.PROF_ENDP + profile for profile in identList] ## Add profile endpoint to profiles in list (PROF_ENDP/<PLATFORM>/<ID>)
 
 for entry in appended_links: ## For every entry in appended_links ->
     prof_linksList.append(entry) ## Add entry to prof_linksList
+
