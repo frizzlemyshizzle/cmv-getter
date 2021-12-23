@@ -1,4 +1,5 @@
 import http.client
+from os import write
 from re import T
 import reader as r
 import time
@@ -6,6 +7,11 @@ import constants as cons
 import json
 import datetime
 from datetime import datetime, date
+import csv
+
+scrape = '2021-10-24'
+count = 0
+peakList = []
 
 
 start = time.time()
@@ -45,8 +51,7 @@ for profile in r.prof_linksList: ## For each profile in list ->
             historylinkList.append(cons.HIST_ENDP + '#######')
 
 
-scrape = '2021-10-24'
-count = 0
+
 
 for link in historylinkList:
 
@@ -74,23 +79,30 @@ for link in historylinkList:
             ratingDataList.append(x) ## Add date to data list
             holderList.append(x) ## Holds all dates to process
 
-        #print(link) ## Print link of player being parsed
         ratingDate = [datetime.strptime(date, '%Y-%m-%d').date() for date in holderList] ## Adjust rating date format
         for date in ratingDate: ## For each date in list ->
             if date >= datetime.date(datetime.strptime(scrape, '%Y-%m-%d')): ## If starting date >= to date in list -> 
                 x = ratingDate.index(date) ## Store index of date as x
-                zonedRatingList.append(ratingList[x]) ## Print the corresponding rating in ratingList
-        print(r.inputdataList[count])
-        print(max(zonedRatingList))
+                zonedRatingList.append(ratingList[x]) ## Append the corresponding rating in ratingList
+                peak = (zonedRatingList.index(max(zonedRatingList)))
 
-    else:
-        zonedRatingList.append('BAD LINK')
+
         print(r.inputdataList[count])
-        print('BAD LINK')
-    zonedRatingList.clear()
+        print(zonedRatingList[peak])    
+        peakList.append(zonedRatingList[peak])
+        print(peakList)
+
+        with open('output.csv', 'w', newline = '') as output:
+            counter = 0
+            peaks = [str(x) for x in peakList]
+            writer = csv.writer(output)
+            r.inputdataList[count].append(peaks[count])
+            counter += 1
+            for data in r.inputdataList:
+                writer.writerow(data)
+        
     count +=1
-
-    ##### WRITE TO CSV ####
-
+    ### WRITE TO FAILED LINKS CSV ###
 end = time.time()
 print('EXECUTION TIME: ', end-start)
+
