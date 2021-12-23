@@ -68,7 +68,6 @@ for link in historylinkList:
         data = res.read() ## Read and define response
         x = json.loads(data) ## Load response to Json
         doublesRating = x['data']['11'] ## Fetch doubles rating from endpoint
-        threesRating  = x['data']['13'] ## Fetch threes rating from endpoint
 
         for entry in doublesRating: ## For recorded mmr in twos ->
             ratingDate.append(entry['collectDate']) ## Add date to ratingDate list
@@ -86,11 +85,9 @@ for link in historylinkList:
                 zonedRatingList.append(ratingList[x]) ## Append the corresponding rating in ratingList
                 peak = (zonedRatingList.index(max(zonedRatingList)))
                 
-
-  
         peakList.append(zonedRatingList[peak])
 
-        with open('2s-output.csv', 'w', newline = '') as output:
+        with open('2s-output.csv', 'w', newline = '') as output: ## Method for writing to CSV
             counter = 0
             peaks = [str(x) for x in peakList]
             writer = csv.writer(output)
@@ -104,4 +101,3 @@ for link in historylinkList:
 end = time.time()
 print('EXECUTION TIME: ', end-start)
 input('Press Enter to finish')
-

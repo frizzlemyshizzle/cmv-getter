@@ -85,14 +85,9 @@ for link in historylinkList:
                 zonedRatingList.append(ratingList[x]) ## Append the corresponding rating in ratingList
                 peak = (zonedRatingList.index(max(zonedRatingList)))
                 
-
-
-        print(r.inputdataList[count])
-        print(zonedRatingList[peak])    
         peakList.append(zonedRatingList[peak])
-        print(peakList)
 
-        with open('3s-output.csv', 'w', newline = '') as output:
+        with open('3s-output.csv', 'w', newline = '') as output: ## Method for writing to CSV
             counter = 0
             peaks = [str(x) for x in peakList]
             writer = csv.writer(output)
