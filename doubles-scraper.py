@@ -52,52 +52,62 @@ for profile in r.prof_linksList: ## For each profile in list ->
 
 
 
+try:
 
-for link in historylinkList:
+    for link in historylinkList:
 
-    ## Define Lists and reset each loop
-    ratingDataList = []
-    ratingList = []
-    ratingDate = []
-    holderList = []
-    zonedRatingList = []
+        ## Define Lists and reset each loop
+        ratingDataList = []
+        ratingList = []
+        ratingDate = []
+        holderList = []
+        zonedRatingList = []
 
-    if link[-1:] != '#':
-        conn.request("GET", link, payload, headers) ## Hit ENDP
-        res = conn.getresponse() ## Define response
-        data = res.read() ## Read and define response
-        x = json.loads(data) ## Load response to Json
-        doublesRating = x['data']['11'] ## Fetch doubles rating from endpoint
+        if link[-1:] != '#':
+            conn.request("GET", link, payload, headers) ## Hit ENDP
+            res = conn.getresponse() ## Define response
+            data = res.read() ## Read and define response
+            x = json.loads(data) ## Load response to Json
+            doublesRating = x['data']['11'] ## Fetch doubles rating from endpoint
 
-        for entry in doublesRating: ## For recorded mmr in twos ->
-            ratingDate.append(entry['collectDate']) ## Add date to ratingDate list
-            ratingList.append(entry['rating']) ## Add MMR to ratingList list
+            for entry in doublesRating: ## For recorded mmr in twos ->
+                ratingDate.append(entry['collectDate']) ## Add date to ratingDate list
+                ratingList.append(entry['rating']) ## Add MMR to ratingList list
 
-        for date in ratingDate: ## For each date in ratingDate list ->
-            x = date[0:10] ## Take only the date (lazy way of remove time from datetime)
-            ratingDataList.append(x) ## Add date to data list
-            holderList.append(x) ## Holds all dates to process
+            for date in ratingDate: ## For each date in ratingDate list ->
+                x = date[0:10] ## Take only the date (lazy way of remove time from datetime)
+                ratingDataList.append(x) ## Add date to data list
+                holderList.append(x) ## Holds all dates to process
 
-        ratingDate = [datetime.strptime(date, '%Y-%m-%d').date() for date in holderList] ## Adjust rating date format
-        for date in ratingDate: ## For each date in list ->
-            if date >= datetime.date(datetime.strptime(scrape, '%Y-%m-%d')): ## If starting date >= to date in list -> 
-                x = ratingDate.index(date) ## Store index of date as x
-                zonedRatingList.append(ratingList[x]) ## Append the corresponding rating in ratingList
-                peak = (zonedRatingList.index(max(zonedRatingList)))
-                
-        peakList.append(zonedRatingList[peak])
+            ratingDate = [datetime.strptime(date, '%Y-%m-%d').date() for date in holderList] ## Adjust rating date format
+            for date in ratingDate: ## For each date in list ->
+                if date >= datetime.date(datetime.strptime(scrape, '%Y-%m-%d')): ## If starting date >= to date in list -> 
+                    x = ratingDate.index(date) ## Store index of date as x
+                    zonedRatingList.append(ratingList[x]) ## Append the corresponding rating in ratingList
+                    peak = (zonedRatingList.index(max(zonedRatingList)))
+                    
+            peakList.append(zonedRatingList[peak])
 
-        with open('2s-output.csv', 'w', newline = '') as output: ## Method for writing to CSV
-            counter = 0
-            peaks = [str(x) for x in peakList]
-            writer = csv.writer(output)
-            r.inputdataList[count].append(peaks[count])
-            counter += 1
-            for data in r.inputdataList:
-                writer.writerow(data)
-    print(str(count+1) + ' of ' + str(r.count) + ' processed')
-    count +=1
-    ### WRITE TO FAILED LINKS CSV ###
+            with open('2s-output.csv', 'w', newline = '') as output: ## Method for writing to CSV
+                counter = 0
+                peaks = [str(x) for x in peakList]
+                writer = csv.writer(output)
+                r.inputdataList[count].append(peaks[count])
+                counter += 1
+                for data in r.inputdataList:
+                    writer.writerow(data)
+        print('Processing ' + str(count+1) + ' of ' + str(r.count) )
+        count +=1
+        ### WRITE TO FAILED LINKS CSV ###
+except IndexError as error:
+    print('Bad tracker in file')
+    print(error)
+    input('Press Enter to finish')
 end = time.time()
 print('EXECUTION TIME: ', end-start)
 input('Press Enter to finish')
+
+
+
+
+
