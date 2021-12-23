@@ -53,6 +53,7 @@ for profile in r.prof_linksList: ## For each profile in list ->
 
 
 try:
+    
     for link in historylinkList:
 
         ## Define Lists and reset each loop
