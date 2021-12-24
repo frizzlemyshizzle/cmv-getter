@@ -52,10 +52,11 @@ for profile in r.prof_linksList: ## For each profile in list ->
 
 
 
+
 try:
 
     for link in historylinkList:
-
+        print('Processing ' + str(count+1) + ' of ' + str(r.count) )
         ## Define Lists and reset each loop
         ratingDataList = []
         ratingList = []
@@ -96,7 +97,6 @@ try:
                 counter += 1
                 for data in r.inputdataList:
                     writer.writerow(data)
-        print('Processing ' + str(count+1) + ' of ' + str(r.count) )
         count +=1
         ### WRITE TO FAILED LINKS CSV ###
 except IndexError as error:
@@ -106,7 +106,6 @@ except IndexError as error:
 end = time.time()
 print('EXECUTION TIME: ', end-start)
 input('Press Enter to finish')
-
 
 
 
